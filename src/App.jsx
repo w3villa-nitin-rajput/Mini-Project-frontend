@@ -4,27 +4,51 @@ import Home from './pages/Home'
 import Products from './pages/Products'
 import About from './pages/About'
 import Contact from './pages/Contact'
+import Cart from './pages/Cart'
 import Navbar from './components/Navbar'
 import LoginPopup from './components/LoginPopup'
 import { useAppContext } from './context/AppContext'
 import { ToastContainer } from 'react-toastify'
 import VerifyEmail from './components/VerifyEmail'
 import Profile from './pages/Profile'
+import Footer from './components/Footer'
+
+// Admin Pages
+import AdminLayout from './pages/seller/AdminLayout'
+import Dashboard from './pages/seller/Dashboard'
+import UsersList from './pages/seller/UsersList'
+import ProductsManager from './pages/seller/ProductsManager'
+import CategoriesManager from './pages/seller/CategoriesManager'
+import OrdersManager from './pages/seller/OrdersManager'
 
 const App = () => {
   const IsSellerPath = useLocation().pathname.includes("seller")
   const { showUserLogin } = useAppContext()
 
   return (
-    <div>
+    <div className={IsSellerPath ? "bg-gray-900 min-h-screen text-white" : ""}>
       {showUserLogin && <LoginPopup />}
       {IsSellerPath ? null : <Navbar />}
 
-      <div className={`${IsSellerPath ? " " : "px-6 md:px-16 lg:px-24 xl:px-32"}`}>
+      <div className={`${IsSellerPath ? "" : "px-6 md:px-16 lg:px-24 xl:px-32"}`}>
         <Routes>
+          {/* Public Routes */}
           <Route path='/' element={<Home />} />
+          <Route path='/products' element={<Products />} />
           <Route path='/verify' element={<VerifyEmail />} />
           <Route path='/profile' element={<Profile />} />
+          <Route path='/cart' element={<Cart />} />
+          <Route path='/about' element={<About />} />
+          <Route path='/contact' element={<Contact />} />
+
+          {/* Admin Routes */}
+          <Route path='/seller' element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path='users' element={<UsersList />} />
+            <Route path='categories' element={<CategoriesManager />} />
+            <Route path='products' element={<ProductsManager />} />
+            <Route path='orders' element={<OrdersManager />} />
+          </Route>
         </Routes>
         <ToastContainer
           position="top-right"
@@ -36,10 +60,10 @@ const App = () => {
           pauseOnFocusLoss
           draggable
           pauseOnHover
-          theme="colored"
         />
       </div>
 
+      {IsSellerPath ? null : <Footer />}
     </div>
 
   )

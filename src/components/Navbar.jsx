@@ -8,8 +8,19 @@ import { FaRegCircleUser } from "react-icons/fa6";
 
 const Navbar = () => {
     const [open, setOpen] = useState(false);
-    const { user, setUser, setShowUserLogin, setToken, setUserData } = useAppContext();
+    const [searchTerm, setSearchTerm] = useState('');
+    const { user, setUser, setShowUserLogin, setToken, userData, setUserData, getCartCount } = useAppContext();
     const navigate = useNavigate()
+
+    const handleSearch = (e) => {
+        if (e.key === 'Enter' || e.type === 'click') {
+            if (searchTerm.trim()) {
+                navigate(`/products?search=${encodeURIComponent(searchTerm.trim())}`);
+                setSearchTerm('');
+                closeMenu();
+            }
+        }
+    };
 
     const logout = useCallback(() => {
         localStorage.removeItem("token");
@@ -39,28 +50,31 @@ const Navbar = () => {
             <div className="hidden sm:flex items-center gap-8">
                 <NavLink to={'/'}>Home</NavLink>
                 {user && <NavLink to={'/myOrders'}>My Orders</NavLink>}
-                <NavLink to={'/product'} onClick={closeMenu}>Products</NavLink>
+                <NavLink to={'/products'} onClick={closeMenu}>Products</NavLink>
                 <NavLink to={'/contact'}>Contact</NavLink>
 
-                <div className="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full">
+                <div className="hidden w-48 lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full">
                     <input
                         className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500"
                         type="text"
                         placeholder="Search products"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        onKeyDown={handleSearch}
                     />
-                    <CiSearch className="w-4 h-4" />
+                    <CiSearch className="w-4 h-4 cursor-pointer" onClick={handleSearch} />
                 </div>
 
                 <div
-                    onClick={() => navigate('/')}
+                    onClick={() => navigate('/cart')}
                     className="relative cursor-pointer hover:opacity-80 transition"
                     role="button"
                     tabIndex={0}
-                    onKeyPress={(e) => e.key === 'Enter' && navigate('/')}
+                    onKeyPress={(e) => e.key === 'Enter' && navigate('/cart')}
                 >
                     <FiShoppingCart className="h-6 w-6" />
                     <span className="absolute -top-2 -right-3 text-xs text-white bg-primary w-4.5 h-4.5 rounded-full flex items-center justify-center">
-                        3
+                        {getCartCount()}
                     </span>
                 </div>
 
@@ -74,13 +88,21 @@ const Navbar = () => {
                 ) : (
                     <div className="relative group inline-block">
                         <FaRegCircleUser className="h-7 w-7 cursor-pointer" />
-                        <div className="cursor-pointer absolute right-0 top-full hidden group-hover:block z-50 bg-white shadow-lg rounded-md p-2 min-w-30">
+                        <div className="cursor-pointer absolute right-0 top-full hidden group-hover:block z-50 bg-white shadow-lg rounded-md p-2 min-w-40">
                             <button
                                 onClick={() => navigate('/profile')}
                                 className="w-full text-left cursor-pointer px-4 py-1 bg-white text-gray-800 rounded hover:bg-gray-100 text-sm mb-1"
                             >
                                 My Profile
                             </button>
+                            {(userData?.role === 'admin' || userData?.role === 1) && (
+                                <button
+                                    onClick={() => navigate('/seller')}
+                                    className="w-full text-left cursor-pointer px-4 py-1 bg-white text-gray-800 rounded hover:bg-gray-100 text-sm mb-1"
+                                >
+                                    Admin Dashboard
+                                </button>
+                            )}
                             <button
                                 onClick={logout}
                                 className="w-full cursor-pointer px-4 py-1 bg-primary text-white rounded hover:bg-primary-dull text-sm"
@@ -115,9 +137,25 @@ const Navbar = () => {
             >
                 <NavLink to={'/'} onClick={closeMenu}>Home</NavLink>
                 {user && (
-                    <NavLink to={'/products'} onClick={closeMenu}>My Orders</NavLink>
+                    <>
+                        <NavLink to={'/myOrders'} onClick={closeMenu}>My Orders</NavLink>
+                        <div className="flex w-full items-center text-sm gap-2 border border-gray-300 px-3 rounded-full my-2 hidden ">
+                            <input
+                                className="py-1.5  bg-transparent outline-none placeholder-gray-500 text-gray-700"
+                                type="text"
+                                placeholder="Search products"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                onKeyDown={handleSearch}
+                            />
+                            <CiSearch className="w-5 h-5 text-gray-500 cursor-pointer" onClick={handleSearch} />
+                        </div>
+                        {(userData?.role === 'admin' || userData?.role === 1) && (
+                            <NavLink to={'/seller'} onClick={closeMenu}>Admin Dashboard</NavLink>
+                        )}
+                    </>
                 )}
-                <NavLink to={'/product'} onClick={closeMenu}>Products</NavLink>
+                <NavLink to={'/products'} onClick={closeMenu}>Products</NavLink>
                 <NavLink to={'/contact'} onClick={closeMenu}>Contact</NavLink>
 
                 {!user ? (
