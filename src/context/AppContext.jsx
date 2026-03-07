@@ -67,6 +67,7 @@ export const AppContextProvider = ({ children }) => {
   }, []);
 
   const fetchProducts = useCallback(async (category) => {
+    console.log("fetchProducts");
     try {
       const response = await productService.getAll(category);
       // The API now returns { products: [...], meta: {...} }
