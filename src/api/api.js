@@ -5,6 +5,10 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const apiClient = axios.create({
     baseURL: backendUrl,
+    headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    }
 });
 
 // REQUEST INTERCEPTOR (Adding Token)
@@ -96,6 +100,14 @@ export const cartService = {
     getCart: () => apiClient.get("/get-cart"),
     addToCart: (productId) => apiClient.post("/cart/add", { product_id: productId }),
     updateQuantity: (productId, quantity) => apiClient.post("/cart/update", { product_id: productId, quantity: quantity }),
+};
+
+export const planService = {
+    getAll: () => apiClient.get("/plans"),
+};
+
+export const subscriptionService = {
+    subscribe: (plan) => apiClient.post("/subscribe", { plan }),
 };
 
 export default apiClient;

@@ -5,6 +5,9 @@ import Products from './pages/Products'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import Cart from './pages/Cart'
+import Pricing from './pages/Pricing'
+import PaymentSuccess from './pages/PaymentSuccess'
+import PaymentCancel from './pages/PaymentCancel'
 import Navbar from './components/Navbar'
 import LoginPopup from './components/LoginPopup'
 import { useAppContext } from './context/AppContext'
@@ -35,6 +38,9 @@ const App = () => {
           {/* Public Routes */}
           <Route path='/' element={<Home />} />
           <Route path='/products' element={<Products />} />
+          <Route path='/pricing' element={<Pricing />} />
+          <Route path='/payment-success' element={<PaymentSuccess />} />
+          <Route path='/payment-cancel' element={<PaymentCancel />} />
           <Route path='/verify' element={<VerifyEmail />} />
           <Route path='/profile' element={<Profile />} />
           <Route path='/cart' element={<Cart />} />

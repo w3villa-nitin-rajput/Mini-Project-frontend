@@ -144,7 +144,7 @@ const CategoriesManager = () => {
                         <thead className="bg-gray-900/50 text-gray-400 text-xs uppercase tracking-wider sticky top-0">
                             <tr>
                                 <th className="px-6 py-4 font-medium">Category Info</th>
-                                <th className="px-6 py-4 font-medium hidden sm:table-cell">Internal Path</th>
+                                <th className="px-6 py-4 font-medium hidden sm:table-cell">Category Name</th>
                                 <th className="px-6 py-4 font-medium hidden md:table-cell">Theme Color</th>
                                 <th className="px-6 py-4 font-medium text-right">Actions</th>
                             </tr>
@@ -175,7 +175,7 @@ const CategoriesManager = () => {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 hidden sm:table-cell">
-                                            <span className="text-sm text-gray-400 font-mono bg-gray-900 px-2 py-1 rounded">/{category.path}</span>
+                                            <span className="text-sm text-gray-400 font-mono bg-gray-900 px-2 py-1 rounded">{category.name}</span>
                                         </td>
                                         <td className="px-6 py-4 hidden md:table-cell">
                                             <div className="flex items-center gap-2">

@@ -12,16 +12,12 @@ const VerifyEmail = () => {
 
     // Handle the actual verification when the token is present
     useEffect(() => {
-        console.log("Token present",token);
-        
         if (token) {
             userService.verifyEmail(token)
                 .then(() => {
-                    console.log("checking");
                     toast.success("Verifying your account...");
                     setStatus('success');
                     toast.success("email verified successfully");
-                    
                 })
                 .catch((err) => {
                     setStatus('error');
