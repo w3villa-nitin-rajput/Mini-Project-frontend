@@ -49,6 +49,7 @@ const Navbar = () => {
             {/* Desktop Menu */}
             <div className="hidden sm:flex items-center gap-8">
                 <NavLink to={'/'}>Home</NavLink>
+                <NavLink to={'/pricing'} onClick={closeMenu}>Pricing</NavLink>
                 {user && <NavLink to={'/myOrders'}>My Orders</NavLink>}
                 <NavLink to={'/products'} onClick={closeMenu}>Products</NavLink>
                 <NavLink to={'/contact'}>Contact</NavLink>
@@ -136,6 +137,7 @@ const Navbar = () => {
                 style={{ top: '60px' }}
             >
                 <NavLink to={'/'} onClick={closeMenu}>Home</NavLink>
+                <NavLink to={'/pricing'} onClick={closeMenu}>Pricing</NavLink>
                 {user && (
                     <>
                         <NavLink to={'/myOrders'} onClick={closeMenu}>My Orders</NavLink>

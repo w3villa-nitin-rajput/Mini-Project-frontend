@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { userService, profileService, productService, categoryService, cartService } from "../api/api";
+import { userService, profileService, productService, categoryService, cartService, subscriptionService, planService } from "../api/api";
 import { toast } from "react-toastify";
 
 export const AppContext = createContext();
@@ -19,6 +19,7 @@ export const AppContextProvider = ({ children }) => {
   // Product & Category state
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [plans, setPlans] = useState([]);
   const [dataLoading, setDataLoading] = useState(true);
 
   // Cart state
@@ -63,6 +64,15 @@ export const AppContextProvider = ({ children }) => {
       setCategories(response.data);
     } catch (error) {
       console.error("Failed to fetch categories:", error);
+    }
+  }, []);
+
+  const fetchPlans = useCallback(async () => {
+    try {
+      const response = await planService.getAll();
+      setPlans(response.data);
+    } catch (error) {
+      console.error("Failed to fetch plans:", error);
     }
   }, []);
 
@@ -167,6 +177,16 @@ export const AppContextProvider = ({ children }) => {
     return totalAmount;
   }
 
+  const subscribe = async (plan) => {
+    try {
+      const response = await subscriptionService.subscribe(plan);
+      return response.data; // This will now contain checkout_url
+    } catch (error) {
+      toast.error(error || "Subscription failed");
+      throw error;
+    }
+  };
+
   // Persist cart to localStorage
   useEffect(() => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
@@ -176,11 +196,11 @@ export const AppContextProvider = ({ children }) => {
   useEffect(() => {
     const loadData = async () => {
       setDataLoading(true);
-      await Promise.all([fetchCategories(), fetchProducts()]);
+      await Promise.all([fetchCategories(), fetchProducts(), fetchPlans()]);
       setDataLoading(false);
     };
     loadData();
-  }, [fetchCategories, fetchProducts]);
+  }, [fetchCategories, fetchProducts, fetchPlans]);
 
   // Load user profile and cart when token is set
   useEffect(() => {
@@ -203,12 +223,13 @@ export const AppContextProvider = ({ children }) => {
     userData, setUserData,
     loadUserProfileData, updateProfile,
     profileLoading,
-    products, categories,
-    fetchProducts, fetchCategories,
+    products, categories, plans,
+    fetchProducts, fetchCategories, fetchPlans,
     dataLoading,
     cartItems, setCartItems,
     addToCart, updateQuantity,
     getCartCount, getCartAmount,
+    subscribe,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
