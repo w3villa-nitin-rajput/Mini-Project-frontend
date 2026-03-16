@@ -39,6 +39,7 @@ const Products = () => {
   }, [searchParams]);
 
   useEffect(() => {
+    setLoading(true);
     const timeoutId = setTimeout(() => {
       fetchProductsData(page, search, selectedCategory);
     }, 300);

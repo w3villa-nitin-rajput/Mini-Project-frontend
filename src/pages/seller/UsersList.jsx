@@ -12,6 +12,9 @@ const UsersList = () => {
     const [search, setSearch] = useState('');
     const { userData } = useAppContext();
 
+    console.log(users);
+    
+
     const fetchUsers = async (pageToFetch) => {
         setLoading(true);
         try {
@@ -82,20 +85,21 @@ const UsersList = () => {
                                 <th className="px-6 py-4 font-medium">User</th>
                                 <th className="px-6 py-4 font-medium hidden sm:table-cell">Contact</th>
                                 <th className="px-6 py-4 font-medium">Status / Role</th>
+                                <th className="px-6 py-4 font-medium hidden md:table-cell">Plan</th>
                                 <th className="px-6 py-4 font-medium text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-700/50">
                             {loading ? (
                                 <tr>
-                                    <td colSpan="4" className="px-6 py-12 text-center text-gray-400">
+                                    <td colSpan="5" className="px-6 py-12 text-center text-gray-400">
                                         <span className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin inline-block"></span>
                                         <p className="mt-2 text-sm">Loading users...</p>
                                     </td>
                                 </tr>
                             ) : filteredUsers.length === 0 ? (
                                 <tr>
-                                    <td colSpan="4" className="px-6 py-12 text-center text-gray-400">
+                                    <td colSpan="5" className="px-6 py-12 text-center text-gray-400">
                                         No users found matching your search.
                                     </td>
                                 </tr>
@@ -104,7 +108,7 @@ const UsersList = () => {
                                     <tr key={user.id} className="hover:bg-gray-700/20 transition-colors">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center">
-                                                <div className="h-10 w-10 flex-shrink-0">
+                                                <div className="h-10 w-10 shrink-0">
                                                     {user.cloudinary_url ? (
                                                         <img className="h-10 w-10 rounded-full object-cover" src={user.cloudinary_url} alt="" />
                                                     ) : (
@@ -146,12 +150,21 @@ const UsersList = () => {
                                                 </div>
                                             </div>
                                         </td>
+                                        <td className="px-6 py-4 hidden md:table-cell text-sm">
+                                            {user.plan? (
+                                                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium capitalize bg-blue-500/10 text-blue-400">
+                                                    {user.plan}
+                                                </span>
+                                            ) : (
+                                                <span className="text-gray-500">No Plan</span>
+                                            )}
+                                        </td>
                                         <td className="px-6 py-4 text-right text-sm font-medium">
                                             <button
                                                 onClick={() => toggleUserRole(user.id, user.role === 1 || user.role === 'admin' ? 'admin' : 'user')}
                                                 className={`text-xs px-3 py-1.5 rounded-full transition-colors border ${user.role === 'admin' || user.role === 1
-                                                        ? 'bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20'
-                                                        : 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20 hover:bg-indigo-500/20'
+                                                    ? 'bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20'
+                                                    : 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20 hover:bg-indigo-500/20'
                                                     }`}
                                             >
                                                 {user.role === 'admin' || user.role === 1 ? 'Remove Admin' : 'Make Admin'}

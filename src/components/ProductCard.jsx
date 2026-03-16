@@ -2,25 +2,29 @@ import React from "react";
 import { assets } from "../assets/assets";
 import { useAppContext } from "../context/AppContext";
 import { CiShoppingCart } from "react-icons/ci";
+import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({ products }) => {
     if (!products || products.length === 0) return null;
-    console.log(products);
     
 
     const { currency, cartItems, addToCart, updateQuantity } = useAppContext();
+    const navigate = useNavigate();
 
     return (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 gap-6 justify-between mt-9">
             {products.map((item, index) => {
-                const itemId = item._id || item.id;
+                const itemId = item.id;
                 const quantity = cartItems[itemId] || 0;
 
                 return (
                     <div key={itemId || index} className="border border-gray-500/20 rounded-md max-w-54 md:px-4 px-3 py-2">
 
-                        {/* Image Section */}
-                        <div className="group cursor-pointer flex items-center justify-center px-2 h-40">
+                        {/* Image Section — clickable to navigate */}
+                        <div
+                            className="group cursor-pointer flex items-center justify-center px-2 h-40"
+                            onClick={() => navigate(`/products/${itemId}`)}
+                        >
                             <img
                                 className="group-hover:scale-105 transition-transform duration-300 max-w-full object-contain"
                                 src={item.image_urls?.[0] || item.image?.[0]}
@@ -30,7 +34,13 @@ const ProductCard = ({ products }) => {
 
                         <div className="text-gray-500/60 text-sm mt-2">
                             <p>{item.category}</p>
-                            <p className="text-gray-700 font-medium text-lg truncate w-full">{item.name}</p>
+                            {/* Product name — also navigates */}
+                            <p
+                                className="text-gray-700 font-medium text-lg truncate w-full cursor-pointer hover:text-primary transition-colors duration-150"
+                                onClick={() => navigate(`/products/${itemId}`)}
+                            >
+                                {item.name}
+                            </p>
 
                             {/* Star Ratings */}
                             <div className="flex items-center gap-0.5">
@@ -58,13 +68,16 @@ const ProductCard = ({ products }) => {
                                     {quantity === 0 ? (
                                         <button
                                             className="flex items-center justify-center gap-1 bg-primary/10 border text-primary-dull md:w-16 w-16 h-8.5 rounded text-primary font-medium"
-                                            onClick={() => addToCart(itemId)}
+                                            onClick={(e) => { e.stopPropagation(); addToCart(itemId); }}
                                         >
                                             <CiShoppingCart className="h-10" />
                                             Add
                                         </button>
                                     ) : (
-                                        <div className="flex items-center justify-center gap-2 md:w-20 w-16 h-8.5 bg-indigo-500/25 rounded select-none">
+                                        <div
+                                            className="flex items-center justify-center gap-2 md:w-20 w-16 h-8.5 bg-indigo-500/25 rounded select-none"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
                                             <button
                                                 onClick={() => updateQuantity(itemId, quantity - 1)}
                                                 className="cursor-pointer text-md px-2 h-full"

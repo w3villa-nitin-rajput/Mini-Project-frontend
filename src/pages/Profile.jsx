@@ -5,7 +5,7 @@ import LocationAutocomplete from "../components/Profile/LocationAutocomplete";
 import MapDisplay from "../components/Profile/MapDisplay";
 
 const Profile = () => {
-    const { userData, loadUserProfileData, updateProfile, profileLoading } = useAppContext();
+    const { userData, loadUserProfileData, updateProfile, downloadProfile, profileLoading } = useAppContext();
 
     const [formData, setFormData] = useState({
         cloudinary_url: "",
@@ -52,6 +52,14 @@ const Profile = () => {
         e.preventDefault();
         try {
             await updateProfile(formData);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleDownload = async () => {
+        try {
+            await downloadProfile();
         } catch (error) {
             console.error(error);
         }
@@ -143,7 +151,15 @@ const Profile = () => {
                         </div>
 
                         {/* Submit Button */}
-                        <div className="pt-4 border-t border-gray-200 flex justify-end">
+                        <div className="pt-4 border-t border-gray-200 flex justify-end gap-4">
+                            <button
+                                type="button"
+                                onClick={handleDownload}
+                                disabled={profileLoading}
+                                className="inline-flex justify-center py-2.5 px-6 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition-colors duration-200"
+                            >
+                                Download Profile
+                            </button>
                             <button
                                 type="submit"
                                 disabled={profileLoading}

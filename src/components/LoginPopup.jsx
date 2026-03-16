@@ -44,8 +44,8 @@ const LoginPopup = () => {
                 navigate('/verify');
             }
         } catch (error) {
-            const message = error.response?.data?.message || "Something went wrong";
-            
+            const message = error || "Something went wrong";
+
             if (error.response?.status === 403) {
                 toast.warning("Please verify your email before logging in.");
                 setShowUserLogin(false);
@@ -64,53 +64,54 @@ const LoginPopup = () => {
     };
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-            <form onSubmit={onLogin} className="bg-white w-[90%] max-w-[350px] p-8 rounded-lg shadow-2xl animate-in fade-in zoom-in duration-300">
-                <div className="flex justify-between items-center mb-6 text-black">
-                    <h2 className="text-xl font-semibold">{state}</h2>
+        <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+            {/* Increased max-w-md (448px) and added p-10 for more breathing room */}
+            <form onSubmit={onLogin} className="bg-white w-[90%] max-w-md p-10 rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-300">
+                <div className="flex justify-between items-center mb-8 text-black">
+                    <h2 className="text-2xl font-bold">{state}</h2>
                     <IoClose
                         onClick={() => setShowUserLogin(false)}
-                        className="w-7 h-7 cursor-pointer hover:text-red-500 transition p-1"
+                        className="w-8 h-8 cursor-pointer hover:bg-gray-100 rounded-full transition p-1.5"
                     />
                 </div>
 
-                <div className="flex flex-col gap-4">
+                {/* Increased gap from 4 to 5 for taller appearance */}
+                <div className="flex flex-col gap-5">
                     {state === "Sign Up" && (
-                        <input name="name" onChange={onChangeHandler} value={data.name} className="border border-gray-300 p-2.5 rounded outline-none focus:border-primary" type="text" placeholder="Your name" required />
+                        <input name="name" onChange={onChangeHandler} value={data.name} className="border border-gray-300 p-3 rounded-lg outline-none focus:border-primary focus:ring-1 focus:ring-primary" type="text" placeholder="Your name" required />
                     )}
-                    <input name="email" onChange={onChangeHandler} value={data.email} className="border border-gray-300 p-2.5 rounded outline-none focus:border-primary" type="email" placeholder="Email address" required />
-                    <input name="password" onChange={onChangeHandler} value={data.password} className="border border-gray-300 p-2.5 rounded outline-none focus:border-primary" type="password" placeholder="Password" required />
+                    <input name="email" onChange={onChangeHandler} value={data.email} className="border border-gray-300 p-3 rounded-lg outline-none focus:border-primary focus:ring-1 focus:ring-primary" type="email" placeholder="Email address" required />
+                    <input name="password" onChange={onChangeHandler} value={data.password} className="border border-gray-300 p-3 rounded-lg outline-none focus:border-primary focus:ring-1 focus:ring-primary" type="password" placeholder="Password" required />
                 </div>
 
-                <button 
+                <button
                     disabled={loading}
-                    type="submit" 
-                    className="w-full bg-primary text-white py-2.5 rounded-md mt-6 hover:bg-primary/90 transition font-medium disabled:bg-gray-400"
+                    type="submit"
+                    className="w-full bg-primary text-white py-3.5 rounded-xl mt-8 hover:bg-primary/90 transition font-bold text-lg shadow-md hover:shadow-lg disabled:bg-gray-400"
                 >
                     {loading ? "Processing..." : (state === "Sign Up" ? "Create account" : "Login")}
                 </button>
 
-                <div className="flex items-center my-4">
-                    <div className="flex-1 border-t border-gray-300"></div>
-                    <span className="px-3 text-gray-400 text-xs">OR</span>
-                    <div className="flex-1 border-t border-gray-300"></div>
+                <div className="flex items-center my-6">
+                    <div className="flex-1 border-t border-gray-200"></div>
+                    <span className="px-4 text-gray-400 text-sm">OR</span>
+                    <div className="flex-1 border-t border-gray-200"></div>
                 </div>
 
-                {/* --- Unified Google Button --- */}
-                <button 
+                <button
                     type="button"
                     onClick={googleLoginHandler}
-                    className="w-full flex items-center justify-center gap-3 border border-gray-300 py-2.5 rounded-md hover:bg-gray-50 transition font-medium text-gray-700 cursor-pointer"
+                    className="w-full flex items-center justify-center gap-3 border border-gray-300 py-3.5 rounded-xl hover:bg-gray-50 transition font-semibold text-gray-700 cursor-pointer"
                 >
-                    <FaGoogle className="text-primary" />
+                    <FaGoogle className="text-xl text-red-500" />
                     <span>Continue with Google</span>
                 </button>
 
-                <div className="mt-6 text-sm text-gray-600 text-center">
+                <div className="mt-8 text-base text-gray-600 text-center">
                     {state === "Login" ? (
-                        <p>Create a new account? <span className="text-primary cursor-pointer font-medium hover:underline" onClick={() => setState("Sign Up")}>Click here</span></p>
+                        <p>Don't have an account? <span className="text-primary cursor-pointer font-bold hover:underline" onClick={() => setState("Sign Up")}>Sign up</span></p>
                     ) : (
-                        <p>Already have an account? <span className="text-primary cursor-pointer font-medium hover:underline" onClick={() => setState("Login")}>Login here</span></p>
+                        <p>Already have an account? <span className="text-primary cursor-pointer font-bold hover:underline" onClick={() => setState("Login")}>Login here</span></p>
                     )}
                 </div>
             </form>

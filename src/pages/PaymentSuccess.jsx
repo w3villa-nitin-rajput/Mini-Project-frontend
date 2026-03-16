@@ -5,13 +5,19 @@ import { CheckCircle } from 'lucide-react';
 
 const PaymentSuccess = () => {
     const [searchParams] = useSearchParams();
-    const { loadUserProfileData, fetchProducts } = useAppContext();
+    const { loadUserProfileData, fetchProducts, setCartItems } = useAppContext();
+    const isOrder = searchParams.get('type') === 'order';
 
     useEffect(() => {
-        // Refresh user data and products to reflect the new plan
+        // Refresh user data and products to reflect changes
         loadUserProfileData();
         fetchProducts();
-    }, [loadUserProfileData, fetchProducts]);
+        
+        if (isOrder) {
+            setCartItems({});
+            localStorage.setItem('cartItems', JSON.stringify({}));
+        }
+    }, [loadUserProfileData, fetchProducts, isOrder, setCartItems]);
 
     return (
         <div className="min-h-[60vh] flex items-center justify-center">
@@ -21,14 +27,17 @@ const PaymentSuccess = () => {
                 </div>
                 <h1 className="text-3xl font-bold text-gray-900 mb-4">Payment Successful!</h1>
                 <p className="text-gray-600 mb-8">
-                    Thank you for subscribing! Your plan has been activated. You can now enjoy exclusive discounts on all our products.
+                    {isOrder 
+                        ? "Thank you for your order! Your payment has been processed successfully. You can track your order in the 'My Orders' section."
+                        : "Thank you for subscribing! Your plan has been activated. You can now enjoy exclusive discounts on all our products."
+                    }
                 </p>
                 <div className="space-y-4">
                     <Link
-                        to="/products"
+                        to={isOrder ? "/myOrders" : "/products"}
                         className="block w-full py-3 bg-primary text-white rounded-xl font-bold hover:bg-primary-dark transition-all shadow-md hover:shadow-lg"
                     >
-                        Start Shopping
+                        {isOrder ? "View My Orders" : "Start Shopping"}
                     </Link>
                     <Link
                         to="/"

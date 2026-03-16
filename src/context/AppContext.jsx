@@ -57,6 +57,38 @@ export const AppContextProvider = ({ children }) => {
     }
   }, []);
 
+  const downloadProfile = useCallback(async () => {
+    try {
+      const response = await profileService.downloadProfile();
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      
+      // Determine filename from headers if possible or use a default
+      const contentDisposition = response.headers['content-disposition'];
+      let filename = 'profile.pdf';
+      if (contentDisposition && contentDisposition.includes('filename=')) {
+          const match = contentDisposition.match(/filename="?([^"]+)"?/);
+          if (match && match[1]) {
+              filename = match[1];
+          }
+      }
+      
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      
+      toast.success("Profile downloaded successfully!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to download profile");
+    }
+  }, []);
+
   // --- Product & Category Methods ---
   const fetchCategories = useCallback(async () => {
     try {
@@ -79,7 +111,8 @@ export const AppContextProvider = ({ children }) => {
   const fetchProducts = useCallback(async (category) => {
     console.log("fetchProducts");
     try {
-      const response = await productService.getAll(category);
+      // Pass perPage = 1000 to ensure AppContext has all products for Cart resolving
+      const response = await productService.getAll(category, 1, 1000);
       // The API now returns { products: [...], meta: {...} }
       setProducts(response.data.products || []);
     } catch (error) {
@@ -92,6 +125,7 @@ export const AppContextProvider = ({ children }) => {
     try {
       const response = await cartService.getCart();
       if (response.data && response.data.cartItems) {
+        localStorage.setItem("cartItems", JSON.stringify(response.data.cartItems));
         setCartItems(response.data.cartItems);
       }
     } catch (error) {
@@ -221,7 +255,7 @@ export const AppContextProvider = ({ children }) => {
     showUserLogin, setShowUserLogin,
     backendUrl,
     userData, setUserData,
-    loadUserProfileData, updateProfile,
+    loadUserProfileData, updateProfile, downloadProfile,
     profileLoading,
     products, categories, plans,
     fetchProducts, fetchCategories, fetchPlans,

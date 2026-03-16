@@ -69,6 +69,7 @@ export const productService = {
     },
     create: (data) => apiClient.post("/products", data),
     update: (id, data) => apiClient.put(`/products/${id}`, data),
+    getOne: (id) => apiClient.get(`/products/${id}`),
     delete: (id) => apiClient.delete(`/products/${id}`),
 };
 
@@ -94,6 +95,7 @@ export const adminService = {
 export const profileService = {
     updateProfile: (data) => apiClient.put("/profile", data),
     getCloudinarySignature: () => apiClient.get("/cloudinary/signature"),
+    downloadProfile: () => apiClient.get("/profile/download", { responseType: 'blob' }),
 };
 
 export const cartService = {
@@ -108,6 +110,11 @@ export const planService = {
 
 export const subscriptionService = {
     subscribe: (plan) => apiClient.post("/subscribe", { plan }),
+};
+
+export const orderService = {
+    getOrders: (page = 1, perPage = 10) => apiClient.get(`/orders?page=${page}&per_page=${perPage}`),
+    createCheckoutSession: (address) => apiClient.post("/orders/checkout", { address }),
 };
 
 export default apiClient;

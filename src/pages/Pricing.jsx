@@ -12,7 +12,7 @@ const Pricing = () => {
             return;
         }
 
-        const currentPlanType = userData?.plan?.plan_type || 'free';
+        const currentPlanType = userData?.plan || 'free';
         if (planId === 'free' || planId === currentPlanType) return;
 
         try {
@@ -37,7 +37,12 @@ const Pricing = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto px-4">
-                {plans.map((plan) => (
+                {plans.map((plan) => {
+                    const currentPlanType = userData?.plan || 'free';
+                    const isCurrentPlan = currentPlanType === plan.plan_type;
+                    const expiresAt = userData?.plan_expires_at ? new Date(userData.plan_expires_at).toLocaleDateString() : '';
+
+                    return (
                     <div
                         key={plan.id}
                         className={`relative rounded-2xl p-8 border-2 transition-all duration-300 ${plan.popular ? 'border-primary shadow-xl scale-105 z-10' : 'border-gray-200 shadow-sm'
@@ -73,19 +78,21 @@ const Pricing = () => {
                         </ul>
 
                         <button
-                            onClick={() => handleSubscribe(plan.plan_type)}
-                            disabled={(userData?.plan?.plan_type || 'free') === plan.plan_type}
-                            className={`w-full py-3 px-6 rounded-xl font-bold transition-all duration-200 ${(userData?.plan?.plan_type || 'free') === plan.plan_type
-                                ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                            onClick={() => handleSubscribe(plan.id)}
+                            disabled={isCurrentPlan}
+                            className={`w-full py-3 px-6 rounded-xl font-bold transition-all duration-200 ${isCurrentPlan
+                                ? 'bg-gray-200 text-gray-500 cursor-not-allowed text-sm'
                                 : plan.popular
                                     ? 'bg-primary text-white hover:bg-primary-dark shadow-md hover:shadow-lg'
                                     : 'bg-white text-gray-900 border-2 border-gray-900 hover:bg-gray-900 hover:text-white'
                                 }`}
                         >
-                            {(userData?.plan?.plan_type || 'free') === plan.plan_type ? 'Current Plan' : plan.plan_type === 'free' ? 'Get Started' : 'Subscribe Now'}
+                            {isCurrentPlan 
+                                ? (expiresAt ? `Subscribed until ${expiresAt}` : 'Current Plan') 
+                                : plan.plan_type === 'free' ? 'Get Started' : 'Subscribe Now'}
                         </button>
                     </div>
-                ))}
+                )})}
             </div>
         </div>
     );

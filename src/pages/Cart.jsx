@@ -45,7 +45,7 @@ const Cart = () => {
                             <p className="text-gray-500 mt-2">Looks like you haven't added anything yet.</p>
                             <button
                                 onClick={() => navigate('/products')}
-                                className="mt-6 px-8 py-3 bg-primary text-white rounded-xl font-semibold hover:scale-105 transition-transform shadow-md"
+                                className="mt-6 px-8 py-3 bg-primary text-white rounded-xl font-semibold hover:scale-105 transition-transform shadow-md cursor-pointer"
                             >
                                 Start Shopping
                             </button>
