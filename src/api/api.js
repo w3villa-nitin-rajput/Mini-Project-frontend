@@ -2,9 +2,10 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
+const backendUrl2 = import.meta.env.VITE_BACKEND_URL2;
 
 const apiClient = axios.create({
-    baseURL: backendUrl,
+    baseURL: backendUrl || backendUrl2,
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
