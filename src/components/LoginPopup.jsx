@@ -59,8 +59,9 @@ const LoginPopup = () => {
     };
 
     const googleLoginHandler = () => {
-        // Direct redirection to backend OAuth route
-        window.location.href = "http://localhost:3000/auth/google_oauth2";
+        // Use the backend URL from environment variables, falling back to localhost if not set
+        const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+        window.location.href = `${backendUrl}/auth/google_oauth2`;
     };
 
     return (
