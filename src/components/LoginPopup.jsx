@@ -19,6 +19,9 @@ const LoginPopup = () => {
     };
 
     const handleAuthSuccess = (token) => {
+        if (localStorage.getItem("token")) {
+            localStorage.removeItem("token");
+        }
         localStorage.setItem("token", token);
         setToken(token);
         setUser(true);
