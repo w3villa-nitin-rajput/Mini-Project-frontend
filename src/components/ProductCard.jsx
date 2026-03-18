@@ -22,15 +22,15 @@ const ProductCard = ({ products }) => {
 
                         {/* Image Section — clickable to navigate */}
                         <div
-                            className="group cursor-pointer flex items-center justify-center px-2 h-40"
-                            onClick={() => navigate(`/products/${itemId}`)}
-                        >
-                            <img
-                                className="group-hover:scale-105 transition-transform duration-300 max-w-full object-contain"
-                                src={item.image_urls?.[0] || item.image?.[0]}
-                                alt={item.name}
-                            />
-                        </div>
+    className="group cursor-pointer flex items-center justify-center px-2 h-40 overflow-hidden" // Added overflow-hidden
+    onClick={() => navigate(`/products/${itemId}`)}
+>
+    <img
+        className="group-hover:scale-105 transition-transform duration-300 max-w-full max-h-full object-contain" // Changed to max-h-full
+        src={item.image_urls?.[0] || item.image?.[0]}
+        alt={item.name}
+    />
+</div>
 
                         <div className="text-gray-500/60 text-sm mt-2">
                             <p>{item.category}</p>
