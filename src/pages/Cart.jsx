@@ -116,19 +116,29 @@ const Cart = () => {
                         <div className="bg-white border border-gray-100 rounded-2xl p-6 sticky top-24 shadow-lg">
                             <h2 className="text-xl font-bold text-gray-900 mb-6">Order Summary</h2>
 
+                            {/* Order Summary */}
                             <div className="space-y-4">
                                 <div className="flex justify-between text-gray-600">
                                     <span>Subtotal</span>
-                                    <span className="font-semibold">{currency}{getCartAmount()}.00</span>
+                                    {/* Changed: added .toFixed(2) and removed manual .00 */}
+                                    <span className="font-semibold">{currency}{getCartAmount().toFixed(2)}</span>
                                 </div>
                                 <div className="flex justify-between text-gray-600">
                                     <span>Shipping Fee</span>
-                                    <span className="font-semibold">{currency}{delivery_fee}.00</span>
+                                    {/* Changed: added .toFixed(2) */}
+                                    <span className="font-semibold">{currency}{delivery_fee.toFixed(2)}</span>
                                 </div>
                                 <div className="h-px bg-gray-100 my-4"></div>
                                 <div className="flex justify-between text-lg font-bold text-gray-900">
                                     <span>Total</span>
-                                    <span>{currency}{getCartAmount() === 0 ? 0 : getCartAmount() + delivery_fee}.00</span>
+                                    {/* Changed: calculated total first, then formatted to 2 decimals */}
+                                    <span>
+                                        {currency}
+                                        {getCartAmount() === 0
+                                            ? "0.00"
+                                            : (getCartAmount() + delivery_fee).toFixed(2)
+                                        }
+                                    </span>
                                 </div>
                             </div>
 
