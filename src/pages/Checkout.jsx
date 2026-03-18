@@ -77,7 +77,7 @@ const Checkout = () => {
                             </div>
                             <h2 className="text-xl font-bold text-gray-800">Delivery Address</h2>
                         </div>
-                        
+
                         <textarea
                             value={address}
                             onChange={(e) => setAddress(e.target.value)}
@@ -113,11 +113,15 @@ const Checkout = () => {
                 <div className="w-full lg:w-[400px]">
                     <div className="bg-white border border-gray-100 rounded-3xl p-8 sticky top-24 shadow-xl">
                         <h2 className="text-xl font-bold text-gray-900 mb-6">Order Summary</h2>
-                        
+
                         <div className="space-y-4 mb-6 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
                             {cartData.map((item, index) => {
                                 const productData = products.find((p) => (p._id || p.id).toString() === item._id.toString());
                                 if (!productData) return null;
+
+                                // FIX 1: Calculate item total and format to 2 decimals
+                                const itemTotal = (item.quantity * (productData.offer_price || productData.price)).toFixed(2);
+
                                 return (
                                     <div key={index} className="flex gap-4 items-center">
                                         <div className="w-12 h-12 bg-gray-50 rounded-lg p-1 border border-gray-100 flex-shrink-0">
@@ -127,7 +131,7 @@ const Checkout = () => {
                                             <p className="text-sm font-bold text-gray-800 truncate">{productData.name}</p>
                                             <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
                                         </div>
-                                        <p className="text-sm font-bold text-gray-700">{currency}{item.quantity * (productData.offer_price || productData.price)}</p>
+                                        <p className="text-sm font-bold text-gray-700">{currency}{itemTotal}</p>
                                     </div>
                                 );
                             })}
@@ -136,16 +140,19 @@ const Checkout = () => {
                         <div className="space-y-4 border-t border-gray-100 pt-6">
                             <div className="flex justify-between text-gray-600">
                                 <span>Subtotal</span>
-                                <span className="font-semibold">{currency}{getCartAmount()}.00</span>
+                                {/* FIX 2: Removed manual .00 and added .toFixed(2) */}
+                                <span className="font-semibold">{currency}{getCartAmount().toFixed(2)}</span>
                             </div>
                             <div className="flex justify-between text-gray-600">
                                 <span>Shipping Fee</span>
-                                <span className="font-semibold">{currency}{delivery_fee}.00</span>
+                                {/* FIX 3: Added .toFixed(2) */}
+                                <span className="font-semibold">{currency}{delivery_fee.toFixed(2)}</span>
                             </div>
                             <div className="h-px bg-gray-100 my-4"></div>
                             <div className="flex justify-between text-xl font-bold text-gray-900">
                                 <span>Total</span>
-                                <span className="text-primary">{currency}{total_amount}.00</span>
+                                {/* FIX 4: Formatted the final total_amount constant */}
+                                <span className="text-primary">{currency}{total_amount.toFixed(2)}</span>
                             </div>
                         </div>
 
