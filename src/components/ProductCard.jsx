@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({ products }) => {
     if (!products || products.length === 0) return null;
-    
+
 
     const { currency, cartItems, addToCart, updateQuantity } = useAppContext();
     const navigate = useNavigate();
@@ -22,15 +22,15 @@ const ProductCard = ({ products }) => {
 
                         {/* Image Section — clickable to navigate */}
                         <div
-    className="group cursor-pointer flex items-center justify-center px-2 h-40 overflow-hidden" // Added overflow-hidden
-    onClick={() => navigate(`/products/${itemId}`)}
->
-    <img
-        className="group-hover:scale-105 transition-transform duration-300 max-w-full max-h-full object-contain" // Changed to max-h-full
-        src={item.cloudinary_url || item.image_urls?.[0] || item.image?.[0]}
-        alt={item.name}
-    />
-</div>
+                            className="group cursor-pointer flex items-center justify-center px-2 h-40 overflow-hidden" // Added overflow-hidden
+                            onClick={() => navigate(`/products/${itemId}`)}
+                        >
+                            <img
+                                className="group-hover:scale-105 transition-transform duration-300 max-w-full max-h-full object-contain" // Changed to max-h-full
+                                src={item.cloudinary_url || item.image_urls?.[0] || item.image?.[0]}
+                                alt={item.name}
+                            />
+                        </div>
 
                         <div className="text-gray-500/60 text-sm mt-2">
                             <p>{item.category}</p>
@@ -57,7 +57,7 @@ const ProductCard = ({ products }) => {
 
                             <div className="flex items-end justify-between mt-3">
                                 <p className="md:text-[16px] text-base font-semibold text-primary">
-                                    {currency}{item.discounted_price || item.offer_price}
+                                    {currency}{item.offer_price}
                                     <span className="ml-2 text-gray-400 md:text-sm text-xs line-through font-normal">
                                         {currency}{item.price}
                                     </span>
