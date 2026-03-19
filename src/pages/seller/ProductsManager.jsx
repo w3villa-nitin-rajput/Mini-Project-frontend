@@ -123,7 +123,6 @@ const ProductsManager = () => {
     };
 
     const handleSubmit = async (e) => {
-        e.submitter.disabled = true;
         e.preventDefault();
         setLoading(true);
         try {
@@ -153,7 +152,6 @@ const ProductsManager = () => {
             toast.error(err || "Failed to save product");
         } finally {
             setLoading(false);
-            e.submitter.disabled = false;
         }
     };
 

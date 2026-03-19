@@ -82,15 +82,25 @@ const CategoriesManager = () => {
     };
 
     const handleSubmit = async (e) => {
-        e.submitter.disabled = true;
         e.preventDefault();
         setLoading(true);
         try {
+            const payload = {
+                category: {
+                    name: formData.name,
+                    path: formData.path,
+                    bg_color: formData.bg_color,
+                    image_url: formData.image_url,
+                    cloudinary_url: formData.cloudinary_url,
+                    cloudinary_public_id: formData.cloudinary_public_id
+                }
+            };
+
             if (isEditing) {
-                await categoryService.update(formData.id, { category: formData });
+                await categoryService.update(formData.id, payload);
                 toast.success("Category updated successfully");
             } else {
-                await categoryService.create({ category: formData });
+                await categoryService.create(payload);
                 toast.success("Category created successfully");
             }
             handleCloseModal();
@@ -99,7 +109,6 @@ const CategoriesManager = () => {
             toast.error(err || "Failed to save category");
         } finally {
             setLoading(false);
-            e.submitter.disabled = false;
         }
     };
 
