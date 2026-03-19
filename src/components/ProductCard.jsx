@@ -27,7 +27,7 @@ const ProductCard = ({ products }) => {
 >
     <img
         className="group-hover:scale-105 transition-transform duration-300 max-w-full max-h-full object-contain" // Changed to max-h-full
-        src={item.image_urls?.[0] || item.image?.[0]}
+        src={item.cloudinary_url || item.image_urls?.[0] || item.image?.[0]}
         alt={item.name}
     />
 </div>

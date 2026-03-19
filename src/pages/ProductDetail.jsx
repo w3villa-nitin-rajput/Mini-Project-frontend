@@ -57,7 +57,7 @@ const ProductDetail = () => {
     );
   }
 
-  const images = product.image_urls || [];
+  const images = product.cloudinary_url ? [product.cloudinary_url, ...(product.image_urls || [])] : (product.image_urls || []);
   const quantity = cartItems[product.id] || 0;
   const displayPrice = product.discounted_price || product.offer_price || product.price;
 

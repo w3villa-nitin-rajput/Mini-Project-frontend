@@ -57,6 +57,8 @@ const ProductsManager = () => {
         offer_price: '',
         description: '',
         image_url: '',
+        cloudinary_url: '',
+        cloudinary_public_id: '',
         in_stock: true
     });
 
@@ -70,10 +72,12 @@ const ProductsManager = () => {
                 price: product.price,
                 offer_price: product.offer_price || '',
                 description: product.description ? product.description.join('\n') : '',
-                image_url: product.image_urls?.[0] || '',
+                image_url: product.cloudinary_url || product.image_urls?.[0] || '',
+                cloudinary_url: product.cloudinary_url || '',
+                cloudinary_public_id: product.cloudinary_public_id || '',
                 in_stock: product.in_stock
             });
-            setImagePreview(product.image_urls?.[0] || null);
+            setImagePreview(product.cloudinary_url || product.image_urls?.[0] || null);
         } else {
             setIsEditing(false);
             setFormData({
@@ -84,6 +88,8 @@ const ProductsManager = () => {
                 offer_price: '',
                 description: '',
                 image_url: '',
+                cloudinary_url: '',
+                cloudinary_public_id: '',
                 in_stock: true
             });
             setImagePreview(null);
@@ -100,9 +106,16 @@ const ProductsManager = () => {
         const file = e.target.files[0];
         if (file) {
             try {
-                const url = await uploadImage(file, 'products');
-                setFormData(prev => ({ ...prev, image_url: url }));
-                setImagePreview(url);
+                const result = await uploadImage(file, 'products');
+                if (result) {
+                    setFormData(prev => ({ 
+                        ...prev, 
+                        image_url: result.url,
+                        cloudinary_url: result.url,
+                        cloudinary_public_id: result.public_id
+                    }));
+                    setImagePreview(result.url);
+                }
             } catch (err) {
                 toast.error("Image upload failed");
             }
@@ -121,6 +134,8 @@ const ProductsManager = () => {
                 offer_price: formData.offer_price ? parseFloat(formData.offer_price) : null,
                 description: formData.description.split('\n').filter(Boolean),
                 image_urls: formData.image_url ? [formData.image_url] : [],
+                cloudinary_url: formData.cloudinary_url,
+                cloudinary_public_id: formData.cloudinary_public_id,
                 in_stock: formData.in_stock
             };
 

@@ -33,7 +33,7 @@ const Category = () => {
             {/* Added aspect-square and fixed width/height */}
             <div className="w-24 h-24 md:w-28 md:h-28 flex items-center justify-center overflow-hidden">
               <img
-                src={category.image_url}
+                src={category.cloudinary_url || category.image_url}
                 alt={category.name}
                 className='group-hover:scale-110 transition duration-300 w-full h-full object-contain'
               />

@@ -22,7 +22,9 @@ const CategoriesManager = () => {
         name: '',
         path: '',
         bg_color: '#F3F4F6',
-        image_url: ''
+        image_url: '',
+        cloudinary_url: '',
+        cloudinary_public_id: ''
     });
 
     const handleOpenModal = (category = null) => {
@@ -33,9 +35,11 @@ const CategoriesManager = () => {
                 name: category.name,
                 path: category.path,
                 bg_color: category.bg_color || '#F3F4F6',
-                image_url: category.image_url || ''
+                image_url: category.cloudinary_url || category.image_url || '',
+                cloudinary_url: category.cloudinary_url || '',
+                cloudinary_public_id: category.cloudinary_public_id || ''
             });
-            setImagePreview(category.image_url || null);
+            setImagePreview(category.cloudinary_url || category.image_url || null);
         } else {
             setIsEditing(false);
             setFormData({
@@ -43,7 +47,9 @@ const CategoriesManager = () => {
                 name: '',
                 path: '',
                 bg_color: '#F3F4F6',
-                image_url: ''
+                image_url: '',
+                cloudinary_url: '',
+                cloudinary_public_id: ''
             });
             setImagePreview(null);
         }
@@ -59,9 +65,16 @@ const CategoriesManager = () => {
         const file = e.target.files[0];
         if (file) {
             try {
-                const url = await uploadImage(file, 'categories');
-                setFormData(prev => ({ ...prev, image_url: url }));
-                setImagePreview(url);
+                const result = await uploadImage(file, 'categories');
+                if (result) {
+                    setFormData(prev => ({ 
+                        ...prev, 
+                        image_url: result.url,
+                        cloudinary_url: result.url,
+                        cloudinary_public_id: result.public_id
+                    }));
+                    setImagePreview(result.url);
+                }
             } catch (err) {
                 toast.error("Image upload failed");
             }
