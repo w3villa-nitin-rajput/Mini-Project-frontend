@@ -37,6 +37,9 @@ export const AppContextProvider = ({ children }) => {
       setUserData(null);
       setToken("");
       localStorage.removeItem("token");
+      if (error && (error.status === 401 || error.message?.includes('401'))) {
+        setShowUserLogin(true);
+      }
     } finally {
       setProfileLoading(false);
     }
@@ -130,6 +133,9 @@ export const AppContextProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Failed to fetch cart:", error);
+      if (error && (error.status === 401 || error.message?.includes('401'))) {
+        setShowUserLogin(true);
+      }
     }
   }, []);
 
