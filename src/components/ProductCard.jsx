@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({ products }) => {
     if (!products || products.length === 0) return null;
+    console.log(products);
 
 
     const { currency, cartItems, addToCart, updateQuantity } = useAppContext();
@@ -57,7 +58,7 @@ const ProductCard = ({ products }) => {
 
                             <div className="flex items-end justify-between mt-3">
                                 <p className="md:text-[16px] text-base font-semibold text-primary">
-                                    {currency}{item.offer_price}
+                                    {currency}{item.discounted_price}
                                     <span className="ml-2 text-gray-400 md:text-sm text-xs line-through font-normal">
                                         {currency}{item.price}
                                     </span>
