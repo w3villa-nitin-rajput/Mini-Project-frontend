@@ -5,9 +5,18 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {
-    const { products, currency, cartItems, updateQuantity, getCartAmount } = useAppContext();
+    const { products, currency, cartItems, updateQuantity, getCartAmount, token, setShowUserLogin } = useAppContext();
     const [cartData, setCartData] = useState([]);
     const navigate = useNavigate();
+
+    const handleCheckout = () => {
+        if (!token) {
+            toast.info("Please login to proceed to checkout");
+            setShowUserLogin(true);
+        } else {
+            navigate('/checkout');
+        }
+    };
 
     useEffect(() => {
         if (products.length > 0) {
@@ -143,7 +152,7 @@ const Cart = () => {
                             </div>
 
                             <button
-                                onClick={() => navigate('/checkout')}
+                                onClick={handleCheckout}
                                 className="w-full mt-8 py-4 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
                             >
                                 Proceed to Checkout
