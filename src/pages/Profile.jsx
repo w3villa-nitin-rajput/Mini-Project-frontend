@@ -136,7 +136,7 @@ const Profile = () => {
                             </div>
 
                             <div className="grid grid-cols-1 gap-y-6">
-                                <div>
+                                <div className="relative z-10">
                                     <LocationAutocomplete
                                         address={formData.address}
                                         setAddress={handleAddressChange}
