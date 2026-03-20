@@ -1,7 +1,19 @@
-import React from "react";
-import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
+import React, { useEffect } from "react";
+import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
-const libraries = ["places"];
+// Fix default marker icon issue in Leaflet + React
+import icon from "leaflet/dist/images/marker-icon.png";
+import iconShadow from "leaflet/dist/images/marker-shadow.png";
+
+let DefaultIcon = L.icon({
+    iconUrl: icon,
+    shadowUrl: iconShadow,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+});
+L.Marker.prototype.options.icon = DefaultIcon;
 
 const mapContainerStyle = {
     width: "100%",
@@ -9,38 +21,41 @@ const mapContainerStyle = {
     borderRadius: "0.5rem"
 };
 
-const defaultCenter = {
-    lat: 40.7128, // Default to NY
-    lng: -74.0060
+const defaultCenter = [40.7128, -74.0060]; // [lat, lng] for Leaflet
+
+// Component to handle map center updates when coordinates change
+const ChangeView = ({ center, zoom }) => {
+    const map = useMap();
+    useEffect(() => {
+        map.setView(center, zoom);
+    }, [center, zoom, map]);
+    return null;
 };
 
 const MapDisplay = ({ coordinates }) => {
-    const { isLoaded, loadError } = useLoadScript({
-        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-        libraries,
-    });
-
     const center = (coordinates && coordinates.lat && coordinates.lng)
-        ? { lat: parseFloat(coordinates.lat), lng: parseFloat(coordinates.lng) }
+        ? [parseFloat(coordinates.lat), parseFloat(coordinates.lng)]
         : defaultCenter;
-
-    if (loadError) return <div className="h-64 flex items-center justify-center bg-red-50 text-red-500 rounded-lg border border-red-200 text-sm">Error loading maps</div>;
-    if (!isLoaded) return <div className="h-64 flex items-center justify-center bg-gray-100 rounded-lg animate-pulse text-gray-400">Loading Map...</div>;
 
     return (
         <div className="w-full h-64 md:h-80 shadow-inner rounded-lg overflow-hidden border border-gray-200 relative mb-6">
-            <GoogleMap
-                mapContainerStyle={mapContainerStyle}
-                zoom={14}
+            <MapContainer
                 center={center}
+                zoom={14}
+                style={mapContainerStyle}
+                scrollWheelZoom={false}
             >
+                <ChangeView center={center} zoom={14} />
+                <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
                 {coordinates && coordinates.lat && coordinates.lng && (
-                    <Marker position={center} animation={window.google.maps.Animation.DROP} />
+                    <Marker position={center} />
                 )}
-            </GoogleMap>
+            </MapContainer>
         </div>
     );
 };
 
-// Memoize to prevent unnecessary re-renders when form states change
 export default React.memo(MapDisplay);

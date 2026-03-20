@@ -1,57 +1,90 @@
-import React, { useRef, useEffect } from "react";
-import { useLoadScript } from "@react-google-maps/api";
-
-const libraries = ["places"];
+import React, { useState, useEffect, useRef } from "react";
+import * as ELG from "esri-leaflet-geocoder";
+import "esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css";
 
 const LocationAutocomplete = ({ address, setAddress, setLocationCoordinates }) => {
-    const { isLoaded, loadError } = useLoadScript({
-        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-        libraries,
-    });
+    const [query, setQuery] = useState(address || "");
+    const [suggestions, setSuggestions] = useState([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const dropdownRef = useRef(null);
 
-    const inputRef = useRef(null);
-    const autocompleteInstance = useRef(null);
-
+    // Update query when address prop changes (initial load)
     useEffect(() => {
-        if (isLoaded && inputRef.current) {
-            // Initialize the Autocomplete class directly from the window object
-            // to bypass the library wrapper limitations
-            autocompleteInstance.current = new window.google.maps.places.Autocomplete(inputRef.current, {
-                fields: ["formatted_address", "geometry", "name"],
-                types: ["address"], // Limits results to actual addresses
-            });
+        setQuery(address || "");
+    }, [address]);
 
-            autocompleteInstance.current.addListener("place_changed", () => {
-                const place = autocompleteInstance.current.getPlace();
+    const handleSearch = (e) => {
+        const val = e.target.value;
+        setQuery(val);
+        setAddress(val);
 
-                if (place.geometry && place.geometry.location) {
-                    const lat = place.geometry.location.lat();
-                    const lng = place.geometry.location.lng();
-                    const formattedAddress = place.formatted_address || place.name;
-
-                    setAddress(formattedAddress);
-                    setLocationCoordinates({ lat, lng });
+        if (val.length > 2) {
+            ELG.geocodeService().suggest().text(val).run((err, results) => {
+                if (!err && results.suggestions) {
+                    setSuggestions(results.suggestions);
+                    setShowSuggestions(true);
                 }
             });
+        } else {
+            setSuggestions([]);
+            setShowSuggestions(false);
         }
-    }, [isLoaded, setAddress, setLocationCoordinates]);
+    };
 
-    if (loadError) return <div className="text-red-500 text-sm">Error loading Google Maps API</div>;
-    if (!isLoaded) return <div className="h-10 w-full bg-gray-100 animate-pulse rounded"></div>;
+    const handleSelect = (suggestion) => {
+        setQuery(suggestion.text);
+        setAddress(suggestion.text);
+        setShowSuggestions(false);
+
+        // Geocode the selected suggestion to get coordinates
+        ELG.geocodeService().geocode().text(suggestion.text).run((err, results) => {
+            if (!err && results.results && results.results.length > 0) {
+                const { lat, lng } = results.results[0].latlng;
+                setLocationCoordinates({ lat, lng });
+            }
+        });
+    };
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setShowSuggestions(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     return (
-        <div className="w-full">
+        <div className="w-full relative" ref={dropdownRef}>
             <label className="block text-sm font-medium text-gray-700 mb-1">
                 Location Address
             </label>
-            <input
-                ref={inputRef}
-                type="text"
-                defaultValue={address} // Use defaultValue to avoid controlled input conflicts with Autocomplete
-                placeholder="Search for your address..."
-                className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                onChange={(e) => setAddress(e.target.value)}
-            />
+            <div className="relative">
+                <input
+                    type="text"
+                    value={query}
+                    placeholder="Search for your address..."
+                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    onChange={handleSearch}
+                    onFocus={() => query.length > 2 && setShowSuggestions(true)}
+                />
+                
+                {showSuggestions && suggestions.length > 0 && (
+                    <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                        {suggestions.map((s, i) => (
+                            <div
+                                key={i}
+                                className="p-3 hover:bg-blue-50 cursor-pointer text-sm text-gray-700 border-b border-gray-50 last:border-0 transition-colors"
+                                onClick={() => handleSelect(s)}
+                            >
+                                {s.text}
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
