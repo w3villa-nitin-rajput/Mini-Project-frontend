@@ -57,7 +57,7 @@ const LocationAutocomplete = ({ address, setAddress, setLocationCoordinates }) =
     }, []);
 
     return (
-        <div className="w-full relative" ref={dropdownRef}>
+        <div className="w-full relative z-[1000]" ref={dropdownRef}>
             <label className="block text-sm font-medium text-gray-700 mb-1">
                 Location Address
             </label>
@@ -72,7 +72,7 @@ const LocationAutocomplete = ({ address, setAddress, setLocationCoordinates }) =
                 />
                 
                 {showSuggestions && suggestions.length > 0 && (
-                    <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                    <div className="absolute z-[1001] w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto">
                         {suggestions.map((s, i) => (
                             <div
                                 key={i}
