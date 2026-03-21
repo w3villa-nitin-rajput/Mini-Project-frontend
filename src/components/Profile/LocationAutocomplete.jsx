@@ -70,9 +70,9 @@ const LocationAutocomplete = ({ address, setAddress, setLocationCoordinates }) =
                     onChange={handleSearch}
                     onFocus={() => query.length > 2 && setShowSuggestions(true)}
                 />
-                
+
                 {showSuggestions && suggestions.length > 0 && (
-                    <div className="absolute z-[2001] w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                    < div className="absolute z-[9999] w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-2xl max-h-60 overflow-y-auto">
                         {suggestions.map((s, i) => (
                             <div
                                 key={i}
@@ -85,7 +85,7 @@ const LocationAutocomplete = ({ address, setAddress, setLocationCoordinates }) =
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     );
 };
 

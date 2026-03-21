@@ -127,16 +127,18 @@ const Profile = () => {
                         </div>
 
                         {/* Location Section */}
+                        {/* Location Section */}
                         <div className="pt-2">
                             <div>
                                 <h3 className="text-lg font-medium leading-6 text-gray-900">Location Settings</h3>
                                 <p className="mt-1 text-sm text-gray-500 mb-6">
-                                    Update your primary address. This helps us personalize your shopping experience.
+                                    Update your primary address.
                                 </p>
                             </div>
 
                             <div className="grid grid-cols-1 gap-y-6">
-                                <div className="relative z-10">
+                                {/* Wrap the Autocomplete in a div with a higher z-index than the map's container */}
+                                <div className="relative z-[3000]">
                                     <LocationAutocomplete
                                         address={formData.address}
                                         setAddress={handleAddressChange}
@@ -144,9 +146,12 @@ const Profile = () => {
                                     />
                                 </div>
 
-                                <MapDisplay
-                                    coordinates={{ lat: formData.latitude, lng: formData.longitude }}
-                                />
+                                {/* Ensure the map container has a lower z-index than the autocomplete wrapper */}
+                                <div className="relative z-[1000]">
+                                    <MapDisplay
+                                        coordinates={{ lat: formData.latitude, lng: formData.longitude }}
+                                    />
+                                </div>
                             </div>
                         </div>
 
