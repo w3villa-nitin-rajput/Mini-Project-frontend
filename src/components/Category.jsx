@@ -19,7 +19,7 @@ const Category = () => {
   }
 
   return (
-    <div className='mt-16'>
+    <div className='mt-12'>
       <p className='text-2xl md:text-3xl font-medium'>Categories</p>
       <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 mt-6 gap-6'>
         {categories.map((category) => (
@@ -38,7 +38,7 @@ const Category = () => {
                 className='group-hover:scale-110 transition duration-300 w-full h-full object-contain'
               />
             </div>
-            <p className='text-sm font-medium mt-1'>{category.name}</p>
+            <p className='text-xl font-medium mt-1'>{category.name}</p>
           </div>
         ))}
       </div>

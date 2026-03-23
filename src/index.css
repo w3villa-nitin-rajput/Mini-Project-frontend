@@ -2,6 +2,9 @@
 @import "tailwindcss";
 
 @theme {
+  --breakpoint-sm: 481px;
+  --breakpoint-md: 769px;
+  --breakpoint-lg: 1025px;
   --color-primary: #4fb48b;
   --color-primary-dull: #44ae7c;
 }

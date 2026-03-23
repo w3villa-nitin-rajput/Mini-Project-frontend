@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 const MainBanner = () => {
     return (
-        <div className="relative z-0 mt-16">
+        <div className="relative z-0 mt-1">
             {/* Desktop Image */}
             <img 
                 className='w-full hidden md:block' 

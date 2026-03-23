@@ -56,39 +56,39 @@ const ProductCard = ({ products }) => {
                                 <p className="ml-1">(4)</p>
                             </div>
 
-                            <div className="flex items-end justify-between mt-3">
-                                <p className="md:text-[16px] text-base font-semibold text-primary">
+                            <div className="flex flex-wrap items-center justify-between mt-3 gap-2">
+                                <p className="md:text-[16px] text-base font-semibold text-primary break-all">
                                     {currency}{item.discounted_price}
-                                    <span className="ml-2 text-gray-400 md:text-sm text-xs line-through font-normal">
+                                    <span className="ml-1 sm:ml-2 text-gray-400 md:text-sm text-xs line-through font-normal">
                                         {currency}{item.price}
                                     </span>
                                 </p>
 
                                 {/* Add Button */}
-                                <div className="text-primary">
+                                <div className="text-primary shrink-0">
                                     {quantity === 0 ? (
                                         <button
-                                            className="flex items-center justify-center gap-1 bg-primary/10 border text-primary-dull md:w-16 w-16 h-8.5 rounded text-primary font-medium"
+                                            className="flex items-center justify-center gap-1 bg-primary/10 border border-primary/20 text-primary md:w-16 w-16 h-8 rounded font-medium"
                                             onClick={(e) => { e.stopPropagation(); addToCart(itemId); }}
                                         >
-                                            <CiShoppingCart className="h-10" />
+                                            <CiShoppingCart className="text-xl" />
                                             Add
                                         </button>
                                     ) : (
                                         <div
-                                            className="flex items-center justify-center gap-2 md:w-20 w-16 h-8.5 bg-indigo-500/25 rounded select-none"
+                                            className="flex items-center justify-between px-1 gap-1 md:w-20 w-16 h-8 bg-indigo-500/25 rounded select-none"
                                             onClick={(e) => e.stopPropagation()}
                                         >
                                             <button
                                                 onClick={() => updateQuantity(itemId, quantity - 1)}
-                                                className="cursor-pointer text-md px-2 h-full"
+                                                className="cursor-pointer text-md h-full flex items-center justify-center w-5"
                                             >
                                                 -
                                             </button>
-                                            <span className="w-5 text-center">{quantity}</span>
+                                            <span className="w-5 text-center text-sm">{quantity}</span>
                                             <button
                                                 onClick={() => updateQuantity(itemId, quantity + 1)}
-                                                className="cursor-pointer text-md px-2 h-full"
+                                                className="cursor-pointer text-md h-full flex items-center justify-center w-5"
                                             >
                                                 +
                                             </button>

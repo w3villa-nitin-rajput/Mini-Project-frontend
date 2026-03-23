@@ -5,12 +5,14 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { userService } from '../api/api';
 import { FaGoogle } from 'react-icons/fa6';
+import { Eye, EyeOff } from 'lucide-react'; // Added import for icons
 
 const LoginPopup = () => {
     const { setShowUserLogin, setToken, setUser } = useAppContext();
     const [state, setState] = useState('Login');
     const [data, setData] = useState({ name: "", email: "", password: "" });
-    const [loading, setLoading] = useState(false); // Added loading state
+    const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false); // Added state for password visibility
     const navigate = useNavigate();
 
     const onChangeHandler = (event) => {
@@ -54,7 +56,7 @@ const LoginPopup = () => {
                 setShowUserLogin(false);
                 navigate('/verify');
             } else {
-                toast.error(message); // Pass string, not the whole error object
+                toast.error(message);
             }
         } finally {
             setLoading(false);
@@ -62,14 +64,12 @@ const LoginPopup = () => {
     };
 
     const googleLoginHandler = () => {
-        // Use the backend URL from environment variables, falling back to localhost if not set
         const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
         window.location.href = `${backendUrl}/auth/google_oauth2`;
     };
 
     return (
         <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-            {/* Increased max-w-md (448px) and added p-10 for more breathing room */}
             <form onSubmit={onLogin} className="bg-white w-[90%] max-w-md p-10 rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-300">
                 <div className="flex justify-between items-center mb-8 text-black">
                     <h2 className="text-2xl font-bold">{state}</h2>
@@ -79,13 +79,30 @@ const LoginPopup = () => {
                     />
                 </div>
 
-                {/* Increased gap from 4 to 5 for taller appearance */}
                 <div className="flex flex-col gap-5">
                     {state === "Sign Up" && (
                         <input name="name" onChange={onChangeHandler} value={data.name} className="border border-gray-300 p-3 rounded-lg outline-none focus:border-primary focus:ring-1 focus:ring-primary" type="text" placeholder="Your name" required />
                     )}
                     <input name="email" onChange={onChangeHandler} value={data.email} className="border border-gray-300 p-3 rounded-lg outline-none focus:border-primary focus:ring-1 focus:ring-primary" type="email" placeholder="Email address" required />
-                    <input name="password" onChange={onChangeHandler} value={data.password} className="border border-gray-300 p-3 rounded-lg outline-none focus:border-primary focus:ring-1 focus:ring-primary" type="password" placeholder="Password" required />
+                    
+                    <div className="relative">
+                        <input 
+                            name="password" 
+                            onChange={onChangeHandler} 
+                            value={data.password} 
+                            className="border border-gray-300 p-3 rounded-lg outline-none focus:border-primary focus:ring-1 focus:ring-primary w-full pr-12" 
+                            type={showPassword ? "text" : "password"} 
+                            placeholder="Password" 
+                            required 
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors"
+                        >
+                            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        </button>
+                    </div>
                 </div>
 
                 <button
@@ -107,7 +124,7 @@ const LoginPopup = () => {
                     onClick={googleLoginHandler}
                     className="w-full flex items-center justify-center gap-3 border border-gray-300 py-3.5 rounded-xl hover:bg-gray-50 transition font-semibold text-gray-700 cursor-pointer"
                 >
-                    <FaGoogle className="text-xl text-red-500" />
+                    <FaGoogle className="text-xl text-green-500" />
                     <span>Continue with Google</span>
                 </button>
 
