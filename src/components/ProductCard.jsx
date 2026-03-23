@@ -68,7 +68,7 @@ const ProductCard = ({ products }) => {
                                 <div className="text-primary shrink-0">
                                     {quantity === 0 ? (
                                         <button
-                                            className="flex items-center justify-center gap-1 bg-primary/10 border border-primary/20 text-primary md:w-16 w-16 h-8 rounded font-medium"
+                                            className="flex items-center justify-center gap-1 bg-primary/10 border border-primary/20 text-primary md:w-14 w-14 h-8 rounded font-medium"
                                             onClick={(e) => { e.stopPropagation(); addToCart(itemId); }}
                                         >
                                             <CiShoppingCart className="text-xl" />
@@ -76,7 +76,7 @@ const ProductCard = ({ products }) => {
                                         </button>
                                     ) : (
                                         <div
-                                            className="flex items-center justify-between px-1 gap-1 md:w-20 w-16 h-8 bg-indigo-500/25 rounded select-none"
+                                            className="flex items-center justify-between px-1 gap-1 md:w-16 w-16 h-8 bg-indigo-500/25 rounded select-none"
                                             onClick={(e) => e.stopPropagation()}
                                         >
                                             <button
