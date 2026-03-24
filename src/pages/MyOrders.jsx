@@ -105,9 +105,6 @@ const MyOrders = () => {
                                                     <span className={`w-2.5 h-2.5 rounded-full ${order.status === 'delivered' ? 'bg-green-500' : 'bg-primary'}`}></span>
                                                     <p className="text-sm font-bold text-gray-700 capitalize">{order.status}</p>
                                                 </div>
-                                                <button onClick={fetchOrders} className="mt-2 text-xs font-semibold text-primary hover:underline border border-primary/20 bg-primary/5 px-3 py-1 rounded-full cursor-pointer">
-                                                    Track Item
-                                                </button>
                                             </div>
                                         </div>
                                     ))}
@@ -115,7 +112,7 @@ const MyOrders = () => {
                             </div>
 
                             {/* Order Footer - Mobile Status Only */}
-                            <div className="sm:hidden px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+                            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
                                 <div className="flex items-center gap-2">
                                     <span className={`w-2 h-2 rounded-full ${order.status === 'delivered' ? 'bg-green-500' : 'bg-primary'}`}></span>
                                     <p className="text-sm font-bold text-gray-700 capitalize">{order.status}</p>

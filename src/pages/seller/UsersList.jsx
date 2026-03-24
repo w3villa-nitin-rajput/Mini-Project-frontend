@@ -10,15 +10,23 @@ const UsersList = () => {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [search, setSearch] = useState('');
+    const [debouncedSearch, setDebouncedSearch] = useState('');
     const { userData } = useAppContext();
 
-    console.log(users);
-    
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            if (search !== debouncedSearch) {
+                setDebouncedSearch(search);
+                setPage(1);
+            }
+        }, 500);
+        return () => clearTimeout(handler);
+    }, [search, debouncedSearch]);
 
-    const fetchUsers = async (pageToFetch) => {
+    const fetchUsers = async (pageToFetch, searchQuery) => {
         setLoading(true);
         try {
-            const res = await adminService.getUsers(pageToFetch, 10);
+            const res = await adminService.getUsers(pageToFetch, 10, searchQuery);
             setUsers(res.data.users);
             setTotalPages(res.data.meta.total_pages);
             setPage(res.data.meta.current_page);
@@ -30,8 +38,8 @@ const UsersList = () => {
     };
 
     useEffect(() => {
-        fetchUsers(page);
-    }, [page]);
+        fetchUsers(page, debouncedSearch);
+    }, [page, debouncedSearch]);
 
     const toggleUserRole = async (userId, currentRole) => {
         // Prevent removing your own admin status
@@ -44,16 +52,13 @@ const UsersList = () => {
         try {
             await adminService.updateUser(userId, { user: { role: newRole } });
             toast.success(`User role updated to ${newRole}`);
-            fetchUsers(page); // Refresh list
+            fetchUsers(page, debouncedSearch); // Refresh list
         } catch (err) {
             toast.error(err || "Failed to update role");
         }
     };
 
-    const filteredUsers = users.filter(user =>
-        user.name?.toLowerCase().includes(search.toLowerCase()) ||
-        user.email?.toLowerCase().includes(search.toLowerCase())
-    );
+
 
     return (
         <div className="space-y-6 animate-fade-in text-gray-100 h-full flex flex-col">
@@ -97,14 +102,14 @@ const UsersList = () => {
                                         <p className="mt-2 text-sm">Loading users...</p>
                                     </td>
                                 </tr>
-                            ) : filteredUsers.length === 0 ? (
+                            ) : users.length === 0 ? (
                                 <tr>
                                     <td colSpan="5" className="px-6 py-12 text-center text-gray-400">
                                         No users found matching your search.
                                     </td>
                                 </tr>
                             ) : (
-                                filteredUsers.map((user) => (
+                                users.map((user) => (
                                     <tr key={user.id} className="hover:bg-gray-700/20 transition-colors">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center">

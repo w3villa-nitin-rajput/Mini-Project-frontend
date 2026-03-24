@@ -4,7 +4,7 @@ import { IoClose } from "react-icons/io5";
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { userService } from '../api/api';
-import { FaGoogle } from 'react-icons/fa6';
+import { FaGoogle, FaFacebook } from 'react-icons/fa6';
 import { Eye, EyeOff } from 'lucide-react'; // Added import for icons
 
 const LoginPopup = () => {
@@ -68,6 +68,11 @@ const LoginPopup = () => {
         window.location.href = `${backendUrl}/auth/google_oauth2`;
     };
 
+    const facebookLoginHandler = () => {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+        window.location.href = `${backendUrl}/auth/facebook`;
+    };
+
     return (
         <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm">
             <form onSubmit={onLogin} className="bg-white w-[90%] max-w-md p-10 rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-300">
@@ -126,6 +131,15 @@ const LoginPopup = () => {
                 >
                     <FaGoogle className="text-xl text-green-500" />
                     <span>Continue with Google</span>
+                </button>
+
+                <button
+                    type="button"
+                    onClick={facebookLoginHandler}
+                    className="w-full flex items-center justify-center gap-3 border border-gray-300 py-3.5 rounded-xl hover:bg-gray-50 transition font-semibold text-gray-700 cursor-pointer mt-3"
+                >
+                    <FaFacebook className="text-xl text-blue-600" />
+                    <span>Continue with Facebook</span>
                 </button>
 
                 <div className="mt-8 text-base text-gray-600 text-center">

@@ -83,7 +83,10 @@ export const categoryService = {
 
 export const adminService = {
     getDashboardStats: () => apiClient.get("/admin/dashboard"),
-    getUsers: (page = 1, perPage = 10) => apiClient.get(`/admin/users?page=${page}&per_page=${perPage}`),
+    getUsers: (page = 1, perPage = 10, search = '') => {
+        const searchParam = search ? `&search=${search}` : '';
+        return apiClient.get(`/admin/users?page=${page}&per_page=${perPage}${searchParam}`);
+    },
     updateUser: (id, data) => apiClient.put(`/admin/users/${id}`, data),
     getOrders: (page = 1, perPage = 10, status = '') => {
         const statusParam = status ? `&status=${status}` : '';
